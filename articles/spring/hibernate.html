@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Integrating hibernate in your project</title>
+  <meta name="description" content="Hibernate Spring integration">
+
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/assets/css/normalize.css">
+  <link rel="stylesheet" href="/assets/css/foundation.css">
+  <link rel="stylesheet" href="/assets/css/portfolio-theme.css">
+  <link rel="stylesheet" href="/assets/css/menu.css">
+  <link rel="stylesheet" href="/assets/css/cards.css">
+  <!-- <link rel="stylesheet" href="/assets/css/resume.css"> -->
+  <script src="/assets/js/vendor/modernizr.js"></script>
+<!-- code mirror dependency-->
+  <link rel="stylesheet" href="/assets/lib/codemirror.css">
+  <link rel="stylesheet" href="/assets/lib/themes/neo.css">
+
+  <script src="/assets/lib/codemirror.js"></script>
+  <script src="/assets/js/vendor/jquery.js"></script>
+  <script src="/assets/lib/clike.js"></script>
+  <script src="/assets/lib/xml.js"></script>
+<!-- -->
+
+  <script src="/assets/js/foundation.min.js"></script>
+  <script src="/assets/js/foundation/foundation.clearing.js"></script>
+  <script>
+    $(document).foundation();
+  </script>
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-68592853-1', 'auto');
+    ga('set', 'dimension1', "0");
+    ga('send', 'pageview');
+
+    </script>
+
+
+
+
+
+  <script>
+        $(document).foundation();
+        var doc = document.documentElement;
+        doc.setAttribute('data-useragent', navigator.userAgent);
+  </script>
+
+  <link rel="canonical" href="http://varunhooda.github.io/articles/spring/hibernate.html">
+  <link rel="alternate" type="application/rss+xml" title="My Personal Website" href="http://varunhooda.github.io/feed.xml" />
+</head>
+
+
+    <body>
+          <div id="wrapper">
+
+              <div id="header">
+                  <nav class="top-bar" data-topbar>
+  <ul class="title-area">
+    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+  </ul>
+  <div class="logo"></div>
+  <section class="top-bar-section">
+    <ul class="center-buttons">
+      <li class="divider"></li>
+      <li><a href="/">Home</a></li>
+      <li class="divider"></li>
+      <li><a href="/projects">Projects</a></li>
+      <li class="divider"></li>
+      <li><a href="/resume">Resume</a></li>
+      <li class="divider"></li>
+      <li><a href="/articles">Articles</a></li>
+      <li class="divider"></li>
+      <li><a href="/photos">Photos</a></li>
+      <li class="divider"></li>
+    </ul>
+  </section>
+</nav>
+
+              </div>
+
+              <div id="content">
+                  http://www.baeldung.com/2011/11/06/restful-web-service-discoverability-part-4/
+
+<div class="row">
+  <div class="large-12 columns">
+    <h1 style="text-align: center">Hibernate</h1>
+  </div>
+</div>
+
+<div class="row">
+<h3>Integrating hibernate in spring project</h3>
+<ul>
+    <li>you need to add following three jars in your project</li>
+    <ul>
+        <li>Mysql Connector: mysql-connector-5.1.36</li>
+        <li>common-dbcp-1.2.2</li>
+        <li>hibernate-core-4.2.20.Final</li>
+    </ul>
+    <li>Create a datasource spring bean</li>
+    <pre>
+        &lt;bean id=&quot;dataSource&quot; class=&quot;org.apache.commons.dbcp.BasicDataSource&quot; destroy-method=&quot;close&quot;&gt;
+        &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.jdbc.Driver&quot;/&gt;
+        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://192.168.33.60:3306/db-name&quot;/&gt;
+        &lt;property name=&quot;username&quot; value=&quot;admin&quot;/&gt;
+        &lt;property name=&quot;password&quot; value=&quot;root&quot;/&gt;
+    &lt;/bean&gt;
+    </pre>
+    <li>Create  a session factory</li>
+    <pre>
+
+        &lt;bean id=&quot;sessionFactory&quot;
+          class=&quot;org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean&quot;&gt;
+
+        &lt;property name=&quot;dataSource&quot;&gt;
+            &lt;ref bean=&quot;dataSource&quot;/&gt;
+        &lt;/property&gt;
+
+        &lt;property name=&quot;hibernateProperties&quot;&gt;
+            &lt;props&gt;
+                &lt;prop key=&quot;hibernate.dialect&quot;&gt;org.hibernate.dialect.MySQLDialect&lt;/prop&gt;
+                &lt;prop key=&quot;hibernate.show_sql&quot;&gt;true&lt;/prop&gt;
+            &lt;/props&gt;
+        &lt;/property&gt;
+
+        &lt;property name=&quot;annotatedClasses&quot;&gt;
+            &lt;list&gt;
+                &lt;value&gt;models.Device&lt;/value&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+
+    &lt;/bean&gt;
+    </pre>
+</ul>
+
+<h3>
+I think we can not use transaction.begin() while getting session using sessionFactory.getCurrentSession()
+Where sessionFactory is spring managed beans
+Qus: who start the session which is returned by sessionFactory.getCurrentSession()
+</h3>
+JTA, Spring Transaction
+Hibernate, JPA
+sessionFactory.openSession() Vs sessionFactory.getCurrentSession()
+https://forum.hibernate.org/viewtopic.php?p=2384979&sid=8367751b54bf160003b867f858393398#p2384979
+
+http://stackoverflow.com/questions/8046662/hibernate-opensession-vs-getcurrentsession
+http://stackoverflow.com/questions/12606257/spring-multiple-transaction-manager-issue
+What is OSGi application
+
+<p>
+    http://stackoverflow.com/questions/1099025/spring-transactional-what-happens-in-background
+
+    https://dzone.com/articles/how-does-spring-transactional
+</p>
+<p>
+    @Repository is an annotation that marks the specific class as a Data Access Object, thus
+    clarifying it's role. Other markers of the same category are @Service and @Controller
+
+    @Repository annotation is a marker for any class that fulfills the role or stereotype
+     (also known as Data Access Object or DAO) of a repository. Among the uses of this marker
+     is the automatic translation of exceptions.
+
+     Spring 2.5 introduces further stereotype annotations: @Component, @Service, and @Controller.
+     @Component is a generic stereotype for any Spring-managed component. @Repository, @Service,
+      and @Controller are specializations of @Component for more specific use cases, for example,
+      in the persistence, service, and presentation layers, respectively.
+
+    Therefore, you can annotate your component classes with @Component, but by annotating them with
+    @Repository, @Service, or @Controller instead, your classes are more properly suited for
+     processing by tools or associating with aspects. For example, these stereotype annotations make
+     ideal targets for pointcuts.
+
+    Thus, if you are choosing between using @Component or @Service for your service layer, @Service
+     is clearly the better choice. Similarly, as stated above, @Repository is already supported as
+     a marker for automatic exception translation in your persistence layer.
+</p>
+
+
+<p>
+    http://www.ibm.com/developerworks/library/j-genericdao/
+
+    Who opens hibernate current context spring-expression
+    http://stackoverflow.com/questions/7871386/what-is-contextual-sessions-in-hibernate
+
+    http://www.journaldev.com/3522/hibernate-sessionfactory-opensession-vs-getcurrentsession-vs-openstatelesssession
+
+@Transactional only works on spring managed bean
+</p>
+</div>
+
+              </div>
+
+              <div id="footer">
+                  
+
+                   
+
+
+                  <div class="footer">
+    <div class="row">
+        <div class="large-6 columns">
+          <h2>About Me</h2>
+          <p>
+              The work that I do is generally described with keywords like Full Stack Developer, Server Side Developer, Technical Architect, or Generalizing Specialist. I am an experienced programmer who can write a non-trivial application end-to-end. In other words, I've worked on all parts of application development spectrum (Data Modelling, Business Logic, API Layer, User Interface, User Experience, Hosting Environment).
+              As part of my professional career, I have worked on creating multiple web applications mostly using Java/JavaEE/Spring. In my free time, I experiment with different technologies and most of my personal projects are open source on Github.
+          </p>
+        </div>
+        <div class="large-6 columns">
+          <h2>Contact Me</h2>
+          <p>
+          </p>
+        </div>
+    </div>
+
+</div>
+
+              </div>
+
+          </div>
+
+    </body>
+
+</html>

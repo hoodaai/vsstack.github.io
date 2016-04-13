@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Spring Dependency Injection</title>
+  <meta name="description" content="Spring Dependency Injection">
+
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/assets/css/normalize.css">
+  <link rel="stylesheet" href="/assets/css/foundation.css">
+  <link rel="stylesheet" href="/assets/css/portfolio-theme.css">
+  <link rel="stylesheet" href="/assets/css/menu.css">
+  <link rel="stylesheet" href="/assets/css/cards.css">
+  <!-- <link rel="stylesheet" href="/assets/css/resume.css"> -->
+  <script src="/assets/js/vendor/modernizr.js"></script>
+<!-- code mirror dependency-->
+  <link rel="stylesheet" href="/assets/lib/codemirror.css">
+  <link rel="stylesheet" href="/assets/lib/themes/neo.css">
+
+  <script src="/assets/lib/codemirror.js"></script>
+  <script src="/assets/js/vendor/jquery.js"></script>
+  <script src="/assets/lib/clike.js"></script>
+  <script src="/assets/lib/xml.js"></script>
+<!-- -->
+
+  <script src="/assets/js/foundation.min.js"></script>
+  <script src="/assets/js/foundation/foundation.clearing.js"></script>
+  <script>
+    $(document).foundation();
+  </script>
+
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-68592853-1', 'auto');
+    ga('set', 'dimension1', "0");
+    ga('send', 'pageview');
+
+    </script>
+
+
+
+
+
+  <script>
+        $(document).foundation();
+        var doc = document.documentElement;
+        doc.setAttribute('data-useragent', navigator.userAgent);
+  </script>
+
+  <link rel="canonical" href="http://varunhooda.github.io/articles/spring/spring-dependency-injection.html">
+  <link rel="alternate" type="application/rss+xml" title="My Personal Website" href="http://varunhooda.github.io/feed.xml" />
+</head>
+
+
+    <body>
+          <div id="wrapper">
+
+              <div id="header">
+                  <nav class="top-bar" data-topbar>
+  <ul class="title-area">
+    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+  </ul>
+  <div class="logo"></div>
+  <section class="top-bar-section">
+    <ul class="center-buttons">
+      <li class="divider"></li>
+      <li><a href="/">Home</a></li>
+      <li class="divider"></li>
+      <li><a href="/projects">Projects</a></li>
+      <li class="divider"></li>
+      <li><a href="/resume">Resume</a></li>
+      <li class="divider"></li>
+      <li><a href="/articles">Articles</a></li>
+      <li class="divider"></li>
+      <li><a href="/photos">Photos</a></li>
+      <li class="divider"></li>
+    </ul>
+  </section>
+</nav>
+
+              </div>
+
+              <div id="content">
+                         <div class="article-title article-card--lightgrey">
+           <div class="gist">
+              <h2>Spring Dependency Injection</h2>
+             <p>Written by <strong>Varun Hooda</strong> <span class="verified"></span></p>
+             <p>things you NEED to know about spring core!</p>
+           </div>
+           <!-- Place this tag where you want the button to render. -->
+           <a class="github-button" href="https://github.com/varunhooda/spring-core/archive/master.zip"
+              data-style="mega" aria-label="Download ntkme/github-buttons on GitHub">Download</a>
+           <!-- Place this tag where you want the button to render. -->
+           <a class="github-button" href="https://github.com/varunhooda/spring-core/fork"
+              data-style="mega" data-count-href="/varunhooda/spring-core/network"
+              data-count-api="/repos/varunhooda/spring-core#forks_count"
+              data-count-aria-label="# forks on GitHub"
+              aria-label="Fork ntkme/github-buttons on GitHub">Fork</a>
+           <!-- Place this tag where you want the button to render. -->
+           <a class="github-button" href="https://github.com/varunhooda/spring-core"
+              data-style="mega" data-count-href="/varunhooda/spring-core/stargazers"
+              data-count-api="/repos/varunhooda/spring-core#stargazers_count"
+              data-count-aria-label="# stargazers on GitHub"
+              aria-label="Star varunhooda/spring-core on GitHub">Star</a>
+       </div>
+      <div class="row">
+         <div class="small-12 columns">
+
+            <article class="post">
+               <div class="content">
+
+                  <h2> Creating a bean and injecting dependencies</h2>
+
+                  <p>
+                     Objects that are managed by the Spring IoC container are called beans. we can configure a bean using  &lt;bean&gt; tag in XML.
+
+                  </p>
+                  <h5 class="subheader">There are two types of dependency injection.</h5>
+                  <ul>
+                      <li>Setter injection</li>
+                      <li>Constructor injection</li>
+                  </ul>
+
+                  <h3>Setter injection.</h3>
+                  <p>
+                      If we have following java class which depends on <i>Converter</i> class
+                  </p>
+                  <div>
+<pre>
+    public class StringConverter {
+        private String string;
+        private Integer acceptableLength;
+        private Converter converter;
+        public void setString(String string) {
+            this.string = string;
+        }
+        public void setAcceptableLength(Integer acceptableLength) {
+            this.acceptableLength = acceptableLength;
+        }
+        public void setConverter(Converter converter) {
+            this.converter = converter;
+        }
+    }
+</pre>
+                  </div>
+
+
+                <!-- <h3><strong><em>(and why your marketing team might not be ready for it)</em></strong></h3> -->
+                  <div class="intro-text">
+                      <p>
+                          In case of Setter-based dependency injection Class must have setter method for the property which we want to initialize or inject,
+                          otherwise we can not initialize that property using IOC container.
+                          You can also use @Required annotation on setter method to make that property mandatory but if you are using
+                          both Constructor-based dependency injection and Setter-based dependency injection(which is generally not a
+                          good idea to mix both in a bean) then you have to set property in bean no matter if you are in
+                          Constructor-based dependency injection.
+                      </p>
+                  </div>
+
+                 <h4>Spring bean configuration.</h4>
+<pre>
+    &lt;bean id=&quot;upperCaseConverter&quot; class=&quot;spring_dependency_injection.UpperCaseConverter&quot;&gt;&lt;/bean&gt;
+
+    &lt;!-- setter injection--&gt;
+    &lt;bean id=&quot;stringConverter&quot; class=&quot;spring_dependency_injection.StringConverter&quot;&gt;
+        &lt;property name=&quot;acceptableLength&quot; value=&quot;30&quot; /&gt;
+        &lt;property name=&quot;string&quot; value=&quot;convert me to uppercase&quot; /&gt;
+        &lt;property name=&quot;converter&quot; ref=&quot;upperCaseConverter&quot; /&gt;
+    &lt;/bean&gt;
+</pre>
+
+<h3>Constructor Injection</h3>
+<p>
+    Here is the Java class to be used for Constructor injection
+</p>
+<pre>
+    public class StringConverter {
+        private String string;
+        private Integer acceptableLength;
+        private Converter converter;
+        public StringConverter() {
+        }
+        public StringConverter(String string, Integer acceptableLength, Converter converter) {
+            this.string = string;
+            this.acceptableLength = acceptableLength;
+            this.converter = converter;
+        }
+    }
+</pre>
+  <h5 class="subheader">There are three ways for constructor injection.</h5>
+  <ul>
+      <li>use the constructor parameter name for value disambiguation
+<pre>
+&lt;bean id=&quot;strConverterUsingConstructorType-1&quot; class=&quot;spring_dependency_injection.StringConverter&quot;&gt;
+    &lt;constructor-arg name=&quot;string&quot; value=&quot;Hello&quot;/&gt;
+    &lt;constructor-arg name=&quot;acceptableLength&quot; value=&quot;30&quot;/&gt;
+    &lt;constructor-arg ref=&quot;upperCaseConverter&quot;/&gt;
+&lt;/bean&gt;
+</pre>
+      </li>
+      <li>explicitly specify the type of the constructor argument using the type attribute
+<pre>
+&lt;bean id=&quot;strConverterUsingConstructorType-2&quot; class=&quot;spring_dependency_injection.StringConverter&quot;&gt;
+    &lt;constructor-arg type=&quot;spring_dependency_injection.Converter&quot; ref=&quot;upperCaseConverter&quot;/&gt;
+    &lt;constructor-arg type=&quot;java.lang.String&quot; value=&quot;Hello&quot;/&gt;
+    &lt;constructor-arg type=&quot;java.lang.Integer&quot; value=&quot;30&quot;/&gt;
+&lt;/bean&gt;
+</pre>
+      </li>
+      <li>Use the index attribute to specify explicitly the index of constructor arguments
+<pre>
+&lt;bean id=&quot;strConverterUsingConstructorType-3&quot; class=&quot;spring_dependency_injection.StringConverter&quot;&gt;
+    &lt;constructor-arg index=&quot;2&quot; ref=&quot;upperCaseConverter&quot;/&gt;
+    &lt;constructor-arg index=&quot;0&quot; value=&quot;Hello&quot;/&gt;
+    &lt;constructor-arg index=&quot;1&quot; value=&quot;30&quot;/&gt;
+&lt;/bean&gt;
+</pre>
+      </li>
+  </ul>
+            </article>
+         </div>
+      </div>
+      <!-- Place this tag right after the last button or just before your close body tag. -->
+      <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+      <script>
+      $(document).ready(function(){
+        var preText = "";
+        $("pre").each(function (){
+          preText = $(this).text().trim();
+          $(this).text("");
+          var editor = CodeMirror(this, {value: preText, mode: "text/x-java", theme: "neo", readOnly: true, showCursorWhenSelecting: false, cursorHeight: 0,viewportMargin: 1});
+        });
+      });
+      </script>
+
+              </div>
+
+              <div id="footer">
+                  
+<div class="row" style="padding-top:20px;">
+
+<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
+fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+
+</div>
+
+
+                   
+
+<div class="row">
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'vhoodalabs';
+    //var disqus_developer = 1;
+    var disqus_identifier = "spring-dependency-injection";
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'vhoodalabs';
+    //var disqus_developer = 1;
+    var disqus_identifier = "spring-dependency-injection";
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+                  <div class="footer">
+    <div class="row">
+        <div class="large-6 columns">
+          <h2>About Me</h2>
+          <p>
+              The work that I do is generally described with keywords like Full Stack Developer, Server Side Developer, Technical Architect, or Generalizing Specialist. I am an experienced programmer who can write a non-trivial application end-to-end. In other words, I've worked on all parts of application development spectrum (Data Modelling, Business Logic, API Layer, User Interface, User Experience, Hosting Environment).
+              As part of my professional career, I have worked on creating multiple web applications mostly using Java/JavaEE/Spring. In my free time, I experiment with different technologies and most of my personal projects are open source on Github.
+          </p>
+        </div>
+        <div class="large-6 columns">
+          <h2>Contact Me</h2>
+          <p>
+          </p>
+        </div>
+    </div>
+
+</div>
+
+              </div>
+
+          </div>
+
+    </body>
+
+</html>
